@@ -19,6 +19,6 @@ export class CreateUserDto {
   readonly password: string;
 
   @ValidateNested()
-  @IsNotEmpty()
+  @Type(() => AddressDto)
   address: AddressDto;
 }
