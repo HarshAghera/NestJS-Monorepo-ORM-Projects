@@ -1,7 +1,17 @@
-import { IsNotEmpty, IsString, IsEmail, ValidateNested } from 'class-validator';
+import {
+  IsNotEmpty,
+  IsString,
+  IsEmail,
+  ValidateNested,
+  IsNumber,
+} from 'class-validator';
 import { AddressDto } from './user-address.dto';
 import { Type } from 'class-transformer';
 export class CreateUserDto {
+  @IsNotEmpty()
+  @IsNumber()
+  readonly id: number;
+
   @IsNotEmpty()
   @IsString()
   readonly firstName: string;
@@ -20,5 +30,5 @@ export class CreateUserDto {
 
   @ValidateNested()
   @Type(() => AddressDto)
-  address: AddressDto;
+  address?: Partial<AddressDto>;
 }
