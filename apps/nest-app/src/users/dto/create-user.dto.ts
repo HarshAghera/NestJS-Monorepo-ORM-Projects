@@ -4,13 +4,11 @@ import {
   IsEmail,
   ValidateNested,
   IsNumber,
+  IsOptional,
 } from 'class-validator';
 import { AddressDto } from './user-address.dto';
 import { Type } from 'class-transformer';
 export class CreateUserDto {
-  @IsNotEmpty()
-  @IsNumber()
-  readonly id: number;
 
   @IsNotEmpty()
   @IsString()

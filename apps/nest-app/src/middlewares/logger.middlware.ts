@@ -1,7 +1,7 @@
 import { createLogger } from 'winston';
 const DailyRotateFile = require('winston-daily-rotate-file');
 
-export function logger(req) {
+export function logger(req:Object) {
   const logger = createLogger({
     level: 'info',
     transports: [

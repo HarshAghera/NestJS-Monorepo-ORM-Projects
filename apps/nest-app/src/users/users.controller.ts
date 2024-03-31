@@ -8,22 +8,24 @@ import {
   Delete,
   UsePipes,
   ParseIntPipe,
-  Req,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { logger } from '../middlewares/logger.middlware';
 import { ParseDatePipe } from '../custom-pipes/parseDate.pipe';
+import { CommonService } from '@app/common';
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
-
+  private commonService = new CommonService();
   @Post()
   create(@Body() createUserDto: CreateUserDto) {
-    logger(createUserDto);
-    this.usersService.create(createUserDto);
-    return createUserDto;
+    const id = this.commonService.generateId();
+    const createData = { id, ...createUserDto };
+    this.usersService.create(createData);
+    logger(createData);
+    return createData;
   }
 
   @Get()
