@@ -9,6 +9,9 @@ import {
 import { AddressDto } from './user-address.dto';
 import { Type } from 'class-transformer';
 export class CreateUserDto {
+  @IsNumber()
+  @IsOptional()
+  readonly id: number;
 
   @IsNotEmpty()
   @IsString()

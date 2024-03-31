@@ -25,7 +25,6 @@ export class UsersService {
     if (index >= 0 && index < this.userData.length) {
       this.userData[index] = updatedData;
     }
-    this.userData.push(updatedData);
     return this.findOne(id);
   }
 

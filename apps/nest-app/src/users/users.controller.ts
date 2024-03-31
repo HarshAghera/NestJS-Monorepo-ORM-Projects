@@ -14,9 +14,10 @@ import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { logger } from '@app/common/middlewares/logger.middlware';
-import { ParseDatePipe } from '../custom-pipes/parseDate.pipe';
+import { ParseDatePipe } from '@app/common/pipes/parseDate.pipe';
 import { CommonService } from '@app/common';
-import { AdminRoleGuard } from '@app/common/admin.guard';
+import { AdminRoleGuard } from '@app/common/guards/admin.guard';
+import { LogExecutionTime } from '@app/common/decorators/logExecution.decorator';
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
@@ -31,6 +32,7 @@ export class UsersController {
   }
 
   @Get()
+  @LogExecutionTime()
   @UseGuards(AdminRoleGuard)
   findAll(): CreateUserDto[] {
     return this.usersService.findAll();
@@ -44,8 +46,10 @@ export class UsersController {
   }
 
   @Patch(':id')
-  @UsePipes(new ParseIntPipe())
-  update(@Param('id') id: number, @Body() updateUserDto: UpdateUserDto) {
+  update(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() updateUserDto: UpdateUserDto,
+  ) {
     logger({ id, updateUserDto });
     return this.usersService.update(+id, updateUserDto);
   }

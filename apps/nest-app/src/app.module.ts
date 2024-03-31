@@ -3,7 +3,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
 import { APP_INTERCEPTOR } from '@nestjs/core';
-import { CustomInterceptor } from '@app/common/common.interceptor';
+import { CustomInterceptor } from '@app/common/interceptors/common.interceptor';
 
 @Module({
   imports: [UsersModule],
