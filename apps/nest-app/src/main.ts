@@ -1,7 +1,7 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
-import { bearerAuth } from './middlewares/auth.middleware';
+import { bearerAuth } from '@app/common/middlewares/auth.middleware';
 import { CustomExceptionFilter } from '@app/common/custom-exception.filter';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);

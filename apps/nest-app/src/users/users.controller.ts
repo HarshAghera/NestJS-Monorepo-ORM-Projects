@@ -8,13 +8,15 @@ import {
   Delete,
   UsePipes,
   ParseIntPipe,
+  UseGuards,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { logger } from '../middlewares/logger.middlware';
+import { logger } from '@app/common/middlewares/logger.middlware';
 import { ParseDatePipe } from '../custom-pipes/parseDate.pipe';
 import { CommonService } from '@app/common';
+import { AdminRoleGuard } from '@app/common/admin.guard';
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
@@ -29,6 +31,7 @@ export class UsersController {
   }
 
   @Get()
+  @UseGuards(AdminRoleGuard)
   findAll(): CreateUserDto[] {
     return this.usersService.findAll();
   }
@@ -56,8 +59,7 @@ export class UsersController {
 
   @Post('date')
   @UsePipes(new ParseDatePipe())
-  getDate(@Body() data: { timestamp: string }) {
-    const timestampString = new Date(+data.timestamp);
-    return { message: 'Timestamp is valid', timestamp: timestampString };
+  getDate(@Body() data: string) {
+    return { message: 'Timestamp is valid', date: data };
   }
 }

@@ -10,9 +10,9 @@ export class ParseDatePipe implements PipeTransform {
     }
 
     const parsedTimestamp = parseInt(timestamp, 10);
-    if (isNaN(parsedTimestamp)) {
+    if (isNaN(parsedTimestamp) || timestamp.length < 13) {
       throw new BadRequestException('Invalid timestamp');
     }
-    return { timestamp };
+    return new Date(parsedTimestamp);
   }
 }
