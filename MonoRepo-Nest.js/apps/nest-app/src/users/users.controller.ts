@@ -15,50 +15,47 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { logger } from '@app/common/middlewares/logger.middlware';
 import { ParseDatePipe } from '@app/common/pipes/parseDate.pipe';
-import { CommonService } from '@app/common';
 import { AdminRoleGuard } from '@app/common/guards/admin.guard';
 import { LogExecutionTime } from '@app/common/decorators/logExecution.decorator';
+import { User } from './schemas/schemas';
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
-  private commonService = new CommonService();
   @Post()
   create(@Body() createUserDto: CreateUserDto) {
-    const id = this.commonService.generateId();
-    const createData = { id, ...createUserDto };
-    this.usersService.create(createData);
-    logger(createData);
-    return createData;
+    try {
+      const createData = createUserDto;
+      const ret = this.usersService.create(createData);
+      logger(createData);
+      return ret;
+    } catch (error) {
+      throw new Error(error);
+    }
   }
 
   @Get()
   @LogExecutionTime()
   @UseGuards(AdminRoleGuard)
-  findAll(): CreateUserDto[] {
-    return this.usersService.findAll();
+  async findAll(): Promise<User[]> {
+    return await this.usersService.findAll();
   }
 
   @Get(':id')
-  @UsePipes(new ParseIntPipe())
-  findOne(@Param('id') id: string): CreateUserDto {
+  findOne(@Param('id') id: string): Promise<User> {
     logger(id);
-    return this.usersService.findOne(+id);
+    return this.usersService.findOne(id);
   }
 
   @Patch(':id')
-  update(
-    @Param('id', ParseIntPipe) id: number,
-    @Body() updateUserDto: UpdateUserDto,
-  ) {
+  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto): Promise<User>  {
     logger({ id, updateUserDto });
-    return this.usersService.update(+id, updateUserDto);
+    return this.usersService.update(id, updateUserDto);
   }
 
   @Delete(':id')
-  @UsePipes(new ParseIntPipe())
   remove(@Param('id') id: string) {
     logger(id);
-    return this.usersService.remove(+id);
+    return this.usersService.remove(id);
   }
 
   @Post('date')
