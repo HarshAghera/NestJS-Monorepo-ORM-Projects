@@ -9,6 +9,8 @@ import { AuthModule } from './auth/auth.module';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { CustomInterceptor } from './common/common.interceptor';
 import { TodoModule } from './todo/todo.module';
+import { AlbumModule } from './album/album.module';
+import { PostModule } from './post/post.module';
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
@@ -17,6 +19,8 @@ import { TodoModule } from './todo/todo.module';
     }),
     UserModule,
     TodoModule,
+    AlbumModule,
+    PostModule,
     AuthModule,
   ],
   controllers: [AppController],
