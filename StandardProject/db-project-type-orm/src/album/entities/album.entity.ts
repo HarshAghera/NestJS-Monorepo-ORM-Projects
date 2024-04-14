@@ -10,4 +10,7 @@ export class Album {
 
   @Column()
   userId: number;
+
+  // @OneToMany(() => Photo, photo => photo.album, { cascade: true })
+  // photos: Photo[];
 }

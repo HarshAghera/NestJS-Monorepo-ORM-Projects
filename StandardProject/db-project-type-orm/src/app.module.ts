@@ -11,6 +11,8 @@ import { CustomInterceptor } from './common/common.interceptor';
 import { TodoModule } from './todo/todo.module';
 import { AlbumModule } from './album/album.module';
 import { PostModule } from './post/post.module';
+import { PhotoModule } from './album/photo/photo.module';
+import { CommentModule } from './post/comment/comment.module';
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
@@ -21,6 +23,8 @@ import { PostModule } from './post/post.module';
     TodoModule,
     AlbumModule,
     PostModule,
+    PhotoModule,
+    CommentModule,
     AuthModule,
   ],
   controllers: [AppController],
