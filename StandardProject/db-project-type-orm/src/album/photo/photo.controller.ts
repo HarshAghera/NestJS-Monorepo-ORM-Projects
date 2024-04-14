@@ -47,9 +47,8 @@ export class PhotoController {
   @Delete(':id')
   remove(
     @Param('id') id: string,
-    @Param('albumId', ParseIntPipe) albumId: number,
   ) {
-    return this.photoService.remove(+id, albumId);
+    return this.photoService.remove(+id);
   }
 
   @UseGuards(AuthGuard('jwt'))

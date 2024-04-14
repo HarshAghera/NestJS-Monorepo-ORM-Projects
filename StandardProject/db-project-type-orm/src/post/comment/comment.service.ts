@@ -4,77 +4,61 @@ import { UpdateCommentDto } from './dto/updateComment.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Comment } from './entities/comment.entity';
 import { Repository } from 'typeorm';
-import { Post } from '../entities/post.entity';
 
 @Injectable()
 export class CommentService {
-  constructor(
-    @InjectRepository(Comment) private repo: Repository<Comment>,
-    @InjectRepository(Post) private postRepo: Repository<Post>,
-  ) {}
+  constructor(@InjectRepository(Comment) private repo: Repository<Comment>) {}
 
   async create(createCommentDto: CreateCommentDto) {
-    const data = this.sanitizeComment(createCommentDto);
-    const todo = this.repo.create(data);
-    const resp = await this.repo.save(todo);
-    const post = await this.postRepo.findOneBy({ id: resp.postId });
-    return this.transformCommentWithPost([resp], [post])[0];
+    const comment = this.repo.create(createCommentDto);
+    const resp = await this.repo.save(comment);
+    return this.transformCommentWithPost([resp])[0];
   }
 
   async findAll(postId: number): Promise<CreateCommentDto[]> {
-    const photos = await this.repo.findBy({ postId });
-    const posts = await this.postRepo.findBy({ id: postId });
-    return this.transformCommentWithPost(photos, posts);
+    const comments = await this.repo.find({
+      where: { post: { id: postId } },
+      relations: ['post'],
+    });
+    return this.transformCommentWithPost(comments);
   }
 
   async findOne(id: number, postId: number): Promise<CreateCommentDto> {
-    const photo = await this.repo.findOneBy({ id, postId });
-    if (!photo)
+    const comment = await this.repo.findOne({
+      where: { id, post: { id: postId } },
+      relations: ['post'],
+    });
+    if (!comment)
       throw new BadRequestException(`Comment with id ${id} not found`);
-    const post = await this.postRepo.findOneBy({ id: postId });
-    return this.transformCommentWithPost([photo], [post])[0];
+    return this.transformCommentWithPost([comment])[0];
   }
 
   async update(
     id: number,
     updateCommentDto: UpdateCommentDto,
   ): Promise<CreateCommentDto> {
-    const todo = this.findOne(id, updateCommentDto.post.id);
-    if (!todo) throw new BadRequestException(`Comment with id ${id} not found`);
-    const data = this.sanitizeComment(updateCommentDto);
-    delete data.id;
-    await this.repo.update(id, { ...data });
+    const comment = this.findOne(id, updateCommentDto.post.id);
+    if (!comment)
+      throw new BadRequestException(`Comment with id ${id} not found`);
+    await this.repo.update(id, { ...updateCommentDto });
     return await this.findOne(id, updateCommentDto.post.id);
   }
 
-  remove(id: number, postId: number) {
-    return this.repo.delete({ id, postId });
+  remove(id: number) {
+    return this.repo.delete({ id });
   }
 
-  transformCommentWithPost(
-    photos: Comment[],
-    posts: Post[],
-  ): CreateCommentDto[] {
-    return photos.map((photo: Comment) => {
-      const post = posts.find((u) => u.id === photo.postId);
+  transformCommentWithPost(comments: Comment[]): CreateCommentDto[] {
+    return comments.map((comment: Comment) => {
       return {
         post: {
-          id: post.id,
+          id: comment.post.id,
         },
-        id: photo.id,
-        name: photo.name,
-        email: photo.email,
-        body: photo.body,
+        id: comment.id,
+        name: comment.name,
+        email: comment.email,
+        body: comment.body,
       };
     });
-  }
-  sanitizeComment(dto: UpdateCommentDto): Comment {
-    return {
-      id: 0,
-      postId: dto.post.id,
-      name: dto.name,
-      email: dto.email,
-      body: dto.body,
-    };
   }
 }

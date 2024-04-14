@@ -1,4 +1,11 @@
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import { User } from 'src/user/entities/user.entity';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  ManyToOne,
+  JoinColumn,
+} from 'typeorm';
 
 @Entity({ name: 'albums' })
 export class Album {
@@ -8,9 +15,7 @@ export class Album {
   @Column()
   title: string;
 
-  @Column()
-  userId: number;
-
-  // @OneToMany(() => Photo, photo => photo.album, { cascade: true })
-  // photos: Photo[];
+  @ManyToOne(() => User)
+  @JoinColumn({ name: 'userId' })
+  user: User;
 }

@@ -4,12 +4,11 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Photo } from './entities/photo.entity';
 import { PhotoService } from './photo.service';
 import { PassportModule } from '@nestjs/passport';
-import { Album } from '../entities/album.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Photo, Album]), PassportModule],
+  imports: [TypeOrmModule.forFeature([Photo]), PassportModule],
   controllers: [PhotoController],
   providers: [PhotoService],
-  exports: [PhotoService, TypeOrmModule.forFeature([Photo, Album])],
+  exports: [PhotoService, TypeOrmModule.forFeature([Photo])],
 })
 export class PhotoModule {}

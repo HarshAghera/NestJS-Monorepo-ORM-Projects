@@ -37,7 +37,6 @@ export class CommentController {
   @Patch(':id')
   update(
     @Param('id', ParseIntPipe) id: number,
-    @Param('postId', ParseIntPipe) postId: number,
     @Body() updateCommentDto: UpdateCommentDto,
   ) {
     return this.commentService.update(+id, updateCommentDto);
@@ -47,9 +46,8 @@ export class CommentController {
   @Delete(':id')
   remove(
     @Param('id') id: string,
-    @Param('postId', ParseIntPipe) postId: number,
   ) {
-    return this.commentService.remove(+id, postId);
+    return this.commentService.remove(+id);
   }
 
   @UseGuards(AuthGuard('jwt'))

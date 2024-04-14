@@ -1,4 +1,11 @@
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import { Post } from 'src/post/entities/post.entity';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  ManyToOne,
+  JoinColumn,
+} from 'typeorm';
 
 @Entity({ name: 'comments' })
 export class Comment {
@@ -14,6 +21,7 @@ export class Comment {
   @Column()
   body: string;
 
-  @Column()
-  postId: number;
+  @ManyToOne(() => Post)
+  @JoinColumn({ name: 'postId' })
+  post: Post;
 }
