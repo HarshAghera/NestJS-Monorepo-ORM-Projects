@@ -7,7 +7,6 @@ import {
   Param,
   Delete,
   ParseIntPipe,
-  BadRequestException,
   UseGuards,
 } from '@nestjs/common';
 import { UserService } from './user.service';

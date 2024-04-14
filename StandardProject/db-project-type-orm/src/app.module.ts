@@ -8,6 +8,7 @@ import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { CustomInterceptor } from './common/common.interceptor';
+import { TodoModule } from './todo/todo.module';
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
@@ -15,6 +16,7 @@ import { CustomInterceptor } from './common/common.interceptor';
       useClass: DatabaseConfigService,
     }),
     UserModule,
+    TodoModule,
     AuthModule,
   ],
   controllers: [AppController],
